@@ -105,7 +105,6 @@ const thoughtController = {
             });
     },
     removeReaction({params}, res){
-        console.log(params);
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
             { $pull: { reactions: { reactionId: params.replyId } } },
@@ -123,7 +122,20 @@ const thoughtController = {
                 console.log(err);
                 res.status(400).json(err);
             });
-    }
+    },
+    // update Thought by id
+    updateThought({ params, body }, res) {
+        console.log(params);
+        Thought.findOneAndUpdate({ _id: params.thoughtId }, body, { new: true })
+        .then(dbThoughtData => {
+            if (!dbThoughtData) {
+                res.status(404).json({ message: 'No User found with this id!' });
+                return;
+            }
+            res.json(dbThoughtData);
+        })
+        .catch(err => res.status(400).json(err));
+    },
 };
 
 module.exports = thoughtController;
