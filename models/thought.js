@@ -7,7 +7,7 @@ const reactionsSchema = new Schema(
             type: Schema.Types.ObjectId,
             default: () => new Types.ObjectId()
         },
-        reactopmBody:{
+        reactionBody:{
             type: String,
             required: true,
             max: 280
