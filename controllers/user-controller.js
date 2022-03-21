@@ -1,4 +1,4 @@
-const {User} = require('../models');
+const {User, Thought} = require('../models');
 
 const userController = {
     getAllUser(req, res) {
@@ -56,15 +56,32 @@ const userController = {
     },
     // delete User
     deleteUser({ params }, res) {
-        User.findOneAndDelete({ _id: params.id })
-        .then(dbUserData => {
-            if (!dbUserData) {
-                res.status(404).json({ message: 'No User found with this id!' });
-                return;
-            }
-            res.json(dbUserData);
-        })
-        .catch(err => res.status(400).json(err));
+        User.findOne({ _id: params.id })
+            .then(dbUserData=>{
+                
+                for(i=0; i<dbUserData.thoughts.length; i++)
+                {
+                    Thought.findOneAndDelete({ _id: dbUserData.thoughts[i] })
+                    .catch(err => res.status(400).json(err));
+
+                }
+                
+            })
+            .then(()=>{
+                User.findOneAndDelete({ _id: params.id })
+                    .then(dbUserData2 => {
+                        if (!dbUserData2) {
+                            res.status(404).json({ message: 'No User found with this id!' });
+                            return;
+                        }
+                        res.json(dbUserData2);
+                    })
+                    .catch(err => res.status(400).json(err));
+                
+            });
+            
+
+       
     },
     //Add friend
     addFriendUser({params}, res){ 
