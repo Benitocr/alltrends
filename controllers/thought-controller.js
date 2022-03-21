@@ -19,7 +19,7 @@ const thoughtController = {
     },
     // get one thought by id
     getThoughtById({ params }, res) {
-        console.log(params);
+        
         Thought.findOne({ _id: params.thoughtId })
             // .populate({
             //     path: 'comments',
@@ -69,7 +69,6 @@ const thoughtController = {
             if (!deletedThought) {
             return res.status(404).json({ message: 'No Thought with this id!' });
             }
-            console.log(params);
             return User.findOneAndUpdate(
                 { _id: params.userId },
                 { $pull: { thoughts: params.thoughtId } },
